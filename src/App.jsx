@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BASE_URL = '';//'https://oldie.veriftools.ru';
+const BASE_URL = 'https://oldie.veriftools.ru';
 const AUTH_URL = `${BASE_URL}/api/frontend/token/`;
 const MENUS_URL = `${BASE_URL}/api/frontend/category/`;
 const FORMS_URL = `${BASE_URL}/api/frontend/generator/`;
 const GEN_URL = `${BASE_URL}/api/integration/generate/`;
 const STATUS_URL = `${BASE_URL}/api/integration/generation-status/`;
-const HEADERS = { 
+
+// Set axios defaults to include the headers for all requests
+axios.defaults.headers.common = {
   "Accept": "application/json, text/plain",
-  "Origin": "https://verif.tools",
-  "Referer": "https://verif.tools/",
   "Authorization": "",
 };
+
 
 const App = () => {
   const [menu, setMenu] = useState([]);
@@ -49,7 +50,6 @@ const App = () => {
     }
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -62,15 +62,13 @@ const App = () => {
       const accessToken = response.data.access;
   
       // Append the access token to the headers
-      headers.Authorization = `Bearer ${accessToken}`;
-  
-      // Set axios defaults to include the headers for all subsequent requests
-      axios.defaults.headers.common = headers;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   
     } catch (error) {
       console.error(error);
     }
   };
+
 
 
   // Fetch the menu when the component mounts
