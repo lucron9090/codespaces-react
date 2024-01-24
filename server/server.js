@@ -11,7 +11,7 @@ const STATUS_URL = `${BASE_URL}/api/integration/generation-status/`;
 const headers = {
   "Origin": "https://verif.tools",
   "Referer": "https://verif.tools/", 
-  'Content-Type': 'application/json',
+  "Accept": "application/json",
 };
 
 const proxy = require('pass-cors')
@@ -31,9 +31,16 @@ app.use(allowCrossDomain);
 
 app.post('/login', async (req, res) => {
   try {
-    const response = await axios.post(AUTH_URL, req.body, { headers });
+    const login_headers  = {
+      "Origin": "https://verif.tools",
+      "Referer": "https://verif.tools/", 
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+    const response = await axios.post(AUTH_URL, req.body, { login_headers });
     const accessToken = response.data.access;
     headers.Authorization = `Bearer ${accessToken}`;
+    headers.
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: error.toString() });
