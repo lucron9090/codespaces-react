@@ -9,8 +9,9 @@ const FORMS_URL = `${BASE_URL}/api/frontend/generator/`;
 
 // Set axios defaults to include the headers for all requests
 axios.defaults.headers.common = {
-  "Content-Type": "application/json",
   "Accept": "application/json, text/plain",
+  "Origin": "https://verif.tools",
+  "Referer": "https://verif.tools/",
   "Authorization": "",
 };
 

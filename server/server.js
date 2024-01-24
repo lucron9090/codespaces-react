@@ -1,20 +1,23 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors');
 const app = express();
-app.use(cors());
 
-const BASE_URL = 'https://oldie.veriftools.ru';
+const BASE_URL = 'p?url=https://oldie.veriftools.ru';
 const AUTH_URL = `${BASE_URL}/api/frontend/token/`;
 const MENUS_URL = `${BASE_URL}/api/frontend/category/`;
 const FORMS_URL = `${BASE_URL}/api/frontend/generator/`;
 const GEN_URL = `${BASE_URL}/api/integration/generate/`;
 const STATUS_URL = `${BASE_URL}/api/integration/generation-status/`;
-
-let headers = { 
-  "Accept": "application/json, text/plain", //, , ,
-  "Authorization": "",
+const headers = {
+  "Origin": "https://verif.tools",
+  "Referer": "https://verif.tools/", 
+  'Content-Type': 'application/json',
 };
+
+const proxy = require('pass-cors')
+app.use('/p', proxy);
+
+
 /*var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', "*");
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
