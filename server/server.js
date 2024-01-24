@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-const BASE_URL = 'p?url=https://oldie.veriftools.ru';
+const BASE_URL = 'https://oldie.veriftools.ru';
 const AUTH_URL = `${BASE_URL}/api/frontend/token/`;
 const MENUS_URL = `${BASE_URL}/api/frontend/category/`;
 const FORMS_URL = `${BASE_URL}/api/frontend/generator/`;
@@ -14,8 +14,6 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-const proxy = require('pass-cors')
-app.use('/p', proxy);
 
 
 /*var allowCrossDomain = function(req, res, next) {
