@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3004';  // Replace with your server URL
+const BASE_URL = 'https://localhost:3004';  // Replace with your server URL
 const AUTH_URL = `${BASE_URL}/login`;
 const MENUS_URL = `${BASE_URL}/menu`;
-const FORMS_URL = `${BASE_URL}/api/frontend/generator/`;
-
-
-// Set axios defaults to include the headers for all requests
-axios.defaults.headers.common = {
-  "Authorization": "",
-};
+const FORMS_URL = `${BASE_URL}/form`;  // Corrected the URL
 
 const App = () => {
+  const [username, setUsername] = useState('');  // Add this line
+  const [password, setPassword] = useState('');  // Add this line
   const [menu, setMenu] = useState([]);
   const [form, setForm] = useState(null);
-  const [taskStatus, setTaskStatus] = useState(null);
-  const [taskID, setTaskID] = useState(null);
-  const [imageURL, setImageURL] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [taskID, setTaskID] = useState(null);
+  const [taskStatus, setTaskStatus] = useState(null);
   
   useEffect(() => {
     setLoading(true);
@@ -29,14 +25,28 @@ const App = () => {
       })
       .catch(error => {
         console.error(error);
+        setError('Failed to fetch menu');
         setLoading(false);
       });
   }, []);
 
   const buildForm = async (slug) => {
+    setLoading(true);
     try {
       const response = await axios.get(`${FORMS_URL}/${slug}`);
       setForm(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setError('Failed to fetch form');
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async (event) => {  // Add this function
+    event.preventDefault();
+    try {
+      const response = await axios.post(AUTH_URL, { username, password });
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -49,6 +59,7 @@ const App = () => {
     try {
       const response = await axios.post(AUTH_URL, formData);
       setTaskID(response.data.task_id);
+      setTaskStatus(response.data.status);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -57,6 +68,12 @@ const App = () => {
 
   return (
     <div>
+      {/* Add a login form */}
+      <form onSubmit={handleLogin}>
+        <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" required />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
       {loading ? (
         <div>Loading...</div>  // Replace this with your loading spinner
       ) : (
